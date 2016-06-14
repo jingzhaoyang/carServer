@@ -59,6 +59,6 @@ IN4 = 18
 
 ## 参考文档
 
-[RPIO库官方文档]('https://pythonhosted.org/RPIO/')
+[RPIO库官方文档](https://pythonhosted.org/RPIO/)
 
 [Sunny博客-树莓派小车之按键控制](http://www.sunnyos.com/article-show-56.html)
