@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <meta charset="utf-8" />
+        <title>WIFI小车客户端</title>
+        <script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+        function go(k){
+                var requestTime= new Date().getTime();
+                $.post('/',{k:k,time:requestTime},function(){},"json");
+        }
+        $(function(){
+                var i = null;
+                window.document.onkeydown = keyDown;
+                function keyDown(env){
+                        env = (env) ? env : window.event;
+                        if(env.keyCode=='87'){
+                                go('w');
+                        }
+                        if(env.keyCode=='83'){
+                                go('s');
+                        }
+                        if(env.keyCode=='65'){
+                                go('a');
+                        }
+                        if(env.keyCode=='68'){
+                                go('d');
+                        }
+
+                };
+                window.document.onkeyup = keyUp;
+                function keyUp(env){
+                        env = (env) ? env : window.event;
+                        if(env.keyCode=='87'){
+                                go('stop');
+                        }
+                        if(env.keyCode=='83'){
+                                go('stop');
+                        }
+                        if(env.keyCode=='65'){
+                                go('stop');
+                        }
+                        if(env.keyCode=='68'){
+                                go('stop');
+                        }
+                }
+                $('.before').mousedown(function(){
+                        i = setInterval(function(){
+                                go('w');
+                        },100);
+                });
+                $('.left').mousedown(function(){
+                        i = setInterval(function(){
+                                go('a');
+                        },100);
+                });
+                $('.right').mousedown(function(){
+                        i = setInterval(function(){
+                                go('d');
+                        },100);
+                });
+                $('.cabk').mousedown(function(){
+                        i = setInterval(function(){
+                                go('s');
+                        },100);
+                });
+                $('#main span').mouseup(function(){
+                        clearInterval(i);
+                        go('stop');
+                });
+        });
+</script>
+<style type="text/css">
+        #main{width: 150px;height: 150px;background: #ccc;}
+        #main span{width: 50px;height: 50px;float: left;z-index: 999;}
+        #main span.on2{background: #ff00ff;}
+</style>
+<div id="main">
+        <span></span>
+        <span class="on2 before"></span>
+        <span></span>
+        <span class="on2 left"></span>
+        <span></span>
+        <span class="on2 right"></span>
+        <span></span>
+        <span class="on2 cabk"></span>
+        <span></span>
+</div>
+</body>
+</html>
