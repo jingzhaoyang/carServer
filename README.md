@@ -12,11 +12,17 @@
 安装pip工具，然后使用pip安装所需的依赖库。
 
 ```
-sudo apt-get install python-dev python-pip
-sudo pip install RPIO tornado json
+sudo apt-get install python-dev python-pip python-opencv redis-server
+sudo pip install tornado json
+
 ```
 
 ## 启动
+
+首先要启动redis服务
+```
+sudo systemctl start redis
+```
 
 启动到前台，用于调试
 

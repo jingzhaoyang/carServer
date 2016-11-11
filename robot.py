@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #coding: utf8
-import RPIO as GPIO
+import RPi.GPIO as GPIO
 import time
 import sys
 import threading
@@ -9,8 +9,11 @@ import tornado.web
 import tornado.httpserver
 import tornado.options
 import json
+import redis
+import sys
+from camera import VideoCamera, capture
 
-tornado.options.define("port",default=8000,type=int)
+tornado.options.define("port",default=80,type=int)
 
 IN1 = 11
 IN2 = 12
@@ -21,7 +24,7 @@ IN4 = 18
 stop_status = 0
 last_key = ""
 last_request_time = 0
-
+r =  redis.StrictRedis()
 
 def init():
     GPIO.setmode(GPIO.BOARD)
@@ -37,8 +40,6 @@ def forward():
     GPIO.output(IN2,GPIO.LOW)
     GPIO.output(IN3,GPIO.HIGH)
     GPIO.output(IN4,GPIO.LOW)
-    # print "forward"
-    # time.sleep(0.1)
 
 # 后退
 def reverse():
@@ -52,19 +53,18 @@ def reverse():
 # 左转弯
 def left():
     global stop_status
-    GPIO.output(IN1,GPIO.LOW)
-    GPIO.output(IN2,GPIO.HIGH)
-    GPIO.output(IN3,GPIO.HIGH)
-    GPIO.output(IN4,GPIO.LOW)
-
-
-# 右转弯
-def right():
-    global stop_status
     GPIO.output(IN1,GPIO.HIGH)
     GPIO.output(IN2,GPIO.LOW)
     GPIO.output(IN3,GPIO.LOW)
     GPIO.output(IN4,GPIO.HIGH)
+
+# 右转弯
+def right():
+    global stop_status
+    GPIO.output(IN1,GPIO.LOW)
+    GPIO.output(IN2,GPIO.HIGH)
+    GPIO.output(IN3,GPIO.HIGH)
+    GPIO.output(IN4,GPIO.LOW)
 
 def stop_car():
     GPIO.output(IN1,False)
@@ -140,9 +140,22 @@ class IndexHandler(tornado.web.RequestHandler):
         self.write(arg)
     def options(self):
             pass
+class VideoHandler(tornado.web.RequestHandler):
+    def set_default_headers(self):
+        self.set_header('Access-Control-Allow-Origin', '*')
+        self.set_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+        self.set_header('Access-Control-Allow-Headers', '*')
+    def get(self):
+        image = r.get('video')
+        self.write(image)
+
+
+
 if __name__ == '__main__':
+    captureThread = threading.Thread(target = capture)
+    captureThread.start()
     tornado.options.parse_command_line()
-    app = tornado.web.Application(handlers=[(r"/",IndexHandler)])
+    app = tornado.web.Application(handlers=[(r'/',IndexHandler), (r'/video_feed', VideoHandler)])
     http_server = tornado.httpserver.HTTPServer(app)
     http_server.listen(tornado.options.options.port)
     tornado.ioloop.IOLoop.instance().start()
