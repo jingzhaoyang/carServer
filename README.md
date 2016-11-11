@@ -73,5 +73,6 @@ IN4 = 18
 [Sunny博客-树莓派小车之按键控制](http://www.sunnyos.com/article-show-56.html)
 
 ## 联系我们
-
+如果遇到问题可以直接在github的issue上提问，也可以通过下面的qq群或论坛提问。
 * QQ群 ： 536720498
+* 论坛 ： club.52robot.org
