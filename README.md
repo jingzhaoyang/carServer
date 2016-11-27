@@ -13,7 +13,7 @@
 
 ```
 sudo apt-get install python-dev python-pip python-opencv redis-server
-sudo pip install tornado json
+sudo pip install tornado json redis
 
 ```
 

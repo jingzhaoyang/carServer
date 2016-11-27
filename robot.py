@@ -97,14 +97,10 @@ class IndexHandler(tornado.web.RequestHandler):
         try:
             arg = self.get_argument('k')
             new_request_time = self.get_argument('time')
-            print 'get last time',new_request_time
         except Exception, e:
             arg = json.loads(self.request.body)['k']
             new_request_time = json.loads(self.request.body)['time']
-            print 'json last time', new_request_time
 
-        print "==new time ==", new_request_time
-        print "==old time ==", old_request_time
         if(arg=='w' and last_key!='w' and new_request_time >= old_request_time):
             print "forward"
             stop_status = 0
